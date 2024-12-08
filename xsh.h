@@ -1,11 +1,11 @@
 #ifndef XSH_H
 #define XSH_H
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ctype.h>
 
 struct xsh_variable {
     char *name;
@@ -21,4 +21,4 @@ void xsh_printvars(void);
 void xsh_freevars(void);
 char *xsh_expandvars(char *line);
 
-#endif // XSH_H
+#endif  // XSH_H

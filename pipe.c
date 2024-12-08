@@ -1,9 +1,16 @@
+// Beatriz Torres Archundia
+// CPSC 351 - 08
+// 12.07.2024
+// btorre0@csu.fullerton.edu
+// Github Username: Btorre0
+
+#include "pipe.h"
+
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 #include "exec.h"
-#include "pipe.h"
 #include "xsh.h"
 
 static char **split_line(char *line) {
@@ -54,7 +61,7 @@ xsh_pipeline *parse_pipeline(char *pipeline) {
     }
     end--;
 
-    // pluh pluh plar parse backgrounds like mj (for &)
+    // parse backgrounds for &
     if (end >= 0 && strcmp(tokens[end], "&") == 0) {
         pipe->background = 1;
         tokens[end] = NULL;
@@ -126,7 +133,6 @@ static void execute_command(char **cmd) {
     fprintf(stderr, "%s: command not found\n", cmd[0]);
     exit(127);
 }
-
 
 void exec_pipeline(xsh_pipeline *pipeline) {
     if (pipeline->ncmds == 1) {

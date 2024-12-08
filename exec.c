@@ -1,3 +1,9 @@
+// Beatriz Torres Archundia
+// CPSC 351 - 08
+// 12.07.2024
+// btorre0@csu.fullerton.edu
+// Github Username: Btorre0
+
 #include "exec.h"
 
 void exec_cd(char *path) {

@@ -1,3 +1,9 @@
+// Beatriz Torres Archundia
+// CPSC 351 - 08
+// 12.07.2024
+// btorre0@csu.fullerton.edu
+// Github Username: Btorre0
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,9 +16,7 @@
 // create a shell loop (xsh#) that reads a line from stdin and executes it.
 // The loop should exit when the user types "exit".
 
-int main(int argc, char *argv[]) {
-
-
+int main(void) {
     char *line = NULL;
     size_t linecap = 0;
     ssize_t linelen;

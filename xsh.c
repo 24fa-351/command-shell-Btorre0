@@ -1,11 +1,18 @@
+// Beatriz Torres Archundia
+// CPSC 351 - 08
+// 12.07.2024
+// btorre0@csu.fullerton.edu
+// Github Username: Btorre0
+
 #include "xsh.h"
+
 #include "pipe.h"
 #include "xsh.h"
 
 // Global variable to store xsh variables
 struct xsh_variable *xsh_variables = NULL;
 
-// adding/updating xsh variables 
+// adding/updating xsh variables
 void xsh_setvar(char *name, char *value) {
     struct xsh_variable *var = xsh_variables;
     while (var) {
