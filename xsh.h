@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <ctype.h>
 
 struct xsh_variable {
@@ -14,13 +13,12 @@ struct xsh_variable {
     struct xsh_variable *next;
 };
 
-static struct xsh_variable *xsh_variables = NULL;
-static void xsh_setvar(char *name, char *value);
-static char *xsh_getvar(char *name);
-static void xsh_unsetvar(char *name);
+void xsh_setvar(char *name, char *value);
+char *xsh_getvar(char *name);
+void xsh_unsetvar(char *name);
 
-static void xsh_printvars(void);
-static xsh_freevars(void);
-static *xsh_expandvars(char *line);
+void xsh_printvars(void);
+void xsh_freevars(void);
+char *xsh_expandvars(char *line);
 
-#endif  // XSH_H
+#endif // XSH_H

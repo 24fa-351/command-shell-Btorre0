@@ -11,6 +11,8 @@
 // The loop should exit when the user types "exit".
 
 int main(int argc, char *argv[]) {
+
+
     char *line = NULL;
     size_t linecap = 0;
     ssize_t linelen;
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
         }
 
         char *tmpline = expanded;
-        xsh_pipeline *p = parse_pipeline(&tmpline);
+        xsh_pipeline *p = parse_pipeline(tmpline);
 
         exec_pipeline(p);
         free_xsh_pipeline(p);

@@ -7,10 +7,7 @@
 #include <unistd.h>
 #include <ctype.h>
 
-
-// mplement "cd" and "pwd". (directly). cd must take a full or relative path.
-
 void exec_cd(char *path);
 void exec_pwd(void);
 
-#endif  // EXEC_H
+#endif // EXEC_H

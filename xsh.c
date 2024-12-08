@@ -2,8 +2,11 @@
 #include "pipe.h"
 #include "xsh.h"
 
-// adding/updating xsh variables
-static void xsh_setvar(char *name, char *value) {
+// Global variable to store xsh variables
+struct xsh_variable *xsh_variables = NULL;
+
+// adding/updating xsh variables 
+void xsh_setvar(char *name, char *value) {
     struct xsh_variable *var = xsh_variables;
     while (var) {
         if (strcmp(var->name, name) == 0) {
@@ -21,7 +24,7 @@ static void xsh_setvar(char *name, char *value) {
 }
 
 // getting xsh variables
-static char *xsh_getvar(char *name) {
+char *xsh_getvar(char *name) {
     struct xsh_variable *var = xsh_variables;
     while (var != NULL) {
         if (strcmp(var->name, name) == 0) {
@@ -33,7 +36,7 @@ static char *xsh_getvar(char *name) {
 }
 
 // removing xsh variables
-static void xsh_unsetvar(char *name) {
+void xsh_unsetvar(char *name) {
     struct xsh_variable **var = &xsh_variables;
 
     while (var != NULL) {
@@ -50,7 +53,7 @@ static void xsh_unsetvar(char *name) {
 }
 
 // printing xsh variables (maybe delete)
-static void xsh_printvars(void) {
+void xsh_printvars(void) {
     struct xsh_variable *var = xsh_variables;
     while (var != NULL) {
         printf("%s=%s\n", var->name, var->value);
@@ -59,7 +62,7 @@ static void xsh_printvars(void) {
 }
 
 // freeing xsh variables
-static xsh_freevars(void) {
+void xsh_freevars(void) {
     struct xsh_variable *var = xsh_variables;
     while (var != NULL) {
         struct xsh_variable *next = var->next;
@@ -73,7 +76,7 @@ static xsh_freevars(void) {
 
 // expanding xsh variables
 // !!!!!!!COME BACK!!!!!!!!!!
-static *xsh_expandvars(char *line) {
+char *xsh_expandvars(char *line) {
     char *expanded = malloc(strlen(line) * 2 + 1);
     if (expanded == NULL) {
         perror("malloc");
