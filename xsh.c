@@ -1,4 +1,6 @@
 #include "xsh.h"
+#include "pipe.h"
+#include "xsh.h"
 
 // adding/updating xsh variables
 static void xsh_setvar(char *name, char *value) {
@@ -11,8 +13,7 @@ static void xsh_setvar(char *name, char *value) {
         }
         var = var->next;
     }
-
-    struct xsh_variable *var = malloc(sizeof(struct xsh_variable));
+    var = malloc(sizeof(struct xsh_variable));
     var->name = strdup(name);
     var->value = strdup(value);
     var->next = xsh_variables;
@@ -49,7 +50,7 @@ static void xsh_unsetvar(char *name) {
 }
 
 // printing xsh variables (maybe delete)
-static void xsh_printvars() {
+static void xsh_printvars(void) {
     struct xsh_variable *var = xsh_variables;
     while (var != NULL) {
         printf("%s=%s\n", var->name, var->value);
@@ -58,7 +59,7 @@ static void xsh_printvars() {
 }
 
 // freeing xsh variables
-static void xsh_freevars() {
+static xsh_freevars(void) {
     struct xsh_variable *var = xsh_variables;
     while (var != NULL) {
         struct xsh_variable *next = var->next;
@@ -72,43 +73,37 @@ static void xsh_freevars() {
 
 // expanding xsh variables
 // !!!!!!!COME BACK!!!!!!!!!!
-static char *xsh_expandvars(char *line) {
+static *xsh_expandvars(char *line) {
     char *expanded = malloc(strlen(line) * 2 + 1);
     if (expanded == NULL) {
         perror("malloc");
         exit(1);
     }
     size_t resulting = 0;
+    size_t len = strlen(line);
 
-    for (size_t ix = 0; ix < strlen(line); ix++) {
+    for (size_t ix = 0; ix < len; ix++) {
         if (line[ix] == '$') {
             ix++;
-            size_t jx = ix;
-            while (line[jx] != '\0' && line[jx] != ' ') {
-                jx++;
+            size_t start = ix;
+            while (ix < len &&
+                   (isalnum((unsigned char)line[ix]) || line[ix] == '_')) {
+                ix++;
             }
-            char *name = strndup(line + ix, jx - ix);
+            size_t var_len = ix - start;
+            char *name = strndup(line + start, var_len);
             char *value = xsh_getvar(name);
             free(name);
-            if (value != NULL) {
-                strcpy(expanded + resulting, value);
-                resulting += strlen(value);
-            } else {
-                expanded[resulting] = '$';
-                resulting++;
+            if (value) {
+                size_t vlen = strlen(value);
+                memcpy(expanded + resulting, value, vlen);
+                resulting += vlen;
             }
-            ix = jx - 1;
+            ix--;
         } else {
-            expanded[resulting] = line[ix];
-            resulting++;
+            expanded[resulting++] = line[ix];
         }
     }
     expanded[resulting] = '\0';
     return expanded;
-}
-
-static void xsh_execute(char *line) {
-    char *expanded = xsh_expandvars(line);
-    system(expanded);
-    free(expanded);
 }

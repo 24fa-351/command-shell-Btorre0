@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "exec.h"
+#include "pipe.h"
+#include "xsh.h"
 
 // create a shell loop (xsh#) that reads a line from stdin and executes it.
 // The loop should exit when the user types "exit".
@@ -19,22 +22,30 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        if (strcmp(line, "exit\n") == 0) {
+        if (linelen > 0 && line[linelen - 1] == '\n') {
+            line[linelen - 1] = '\0';
+        }
+
+        if (strcmp(line, "exit") == 0 || strcmp(line, "quit") == 0) {
             break;
         }
 
-        // remove the newline character
-        line[linelen - 1] = '\0';
-
-        if (strncmp(line, "cd ", 3) == 0) {
-            exec_cd(line + 3);
-        } else if (strcmp(line, "pwd") == 0) {
-            exec_pwd();
-        } else {
-            system(line);
+        char *expanded = xsh_expandvars(line);
+        if (!expanded[0]) {
+            free(expanded);
+            continue;
         }
+
+        char *tmpline = expanded;
+        xsh_pipeline *p = parse_pipeline(&tmpline);
+
+        exec_pipeline(p);
+        free_xsh_pipeline(p);
+
+        free(expanded);
     }
 
     free(line);
+    xsh_freevars();
     return 0;
 }
