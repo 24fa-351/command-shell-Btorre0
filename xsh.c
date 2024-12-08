@@ -82,7 +82,6 @@ void xsh_freevars(void) {
 }
 
 // expanding xsh variables
-// !!!!!!!COME BACK!!!!!!!!!!
 char *xsh_expandvars(char *line) {
     char *expanded = malloc(strlen(line) * 2 + 1);
     if (expanded == NULL) {
