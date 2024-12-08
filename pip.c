@@ -1,53 +1,34 @@
-#include "pipe.h"
 #include "exec.h"
+#include "pipe.h"
 
 static char **split_line(char *line) {
-    char **tokens = malloc(64 * sizeof(char *));
-    if (tokens == NULL) {
-        perror("malloc");
-        exit(1);
+    char **tokens = NULL;
+    size_t count = 0;
+    char *tok = strtok(line, " ");
+    while (tok != NULL) {
+        tokens = realloc(tokens, sizeof(char *) * ++count);
+        if (tokens == NULL) {
+            perror("realloc");
+            exit(1);
+        }
+        tokens[count - 1] = tok;
+        tok = strtok(NULL, " ");
     }
-
-    char *token = strtok(line, " ");
-    int i = 0;
-    while (token != NULL) {
-        tokens[i++] = token;
-        token = strtok(NULL, " ");
-    }
-    tokens[i] = NULL;
+    // maybe make this into an if
+    tokens = realloc(tokens, sizeof(char *) * (count + 1));
+    tokens[count] = NULL;
     return tokens;
 }
 
-
 static xsh_pipeline *parse_pipeline(char **pipeline) {
     xsh_pipeline *p = malloc(sizeof(xsh_pipeline));
-    if (p == NULL) {
-        perror("malloc");
-        exit(1);
-    }
-
-    p->commands = malloc(64 * sizeof(char *));
-    if (p->commands == NULL) {
-        perror("malloc");
-        exit(1);
-    }
-
-    int i = 0;
-    while (pipeline[i] != NULL) {
-        p->commands[i] = pipeline[i];
-        i++;
-    }
-    p->commands[i] = NULL;
-
-    p->infile = NULL;
-    p->outfile = NULL;
-    p->background = 0;
 
     return p;
 }
 
-
-static void free_xsh_pipeline(xsh_pipeline *pipeline){
+static void free_xsh_pipeline(xsh_pipeline *pipeline) {
     free(pipeline->commands);
     free(pipeline);
 }
+
+static void exec_pipeline(xsh_pipeline *pipeline) {}
